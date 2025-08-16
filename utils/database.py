@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime, date, timedelta
 
 class Database:
     def __init__(self, client):
@@ -21,6 +22,14 @@ class Database:
                         role_id INT PRIMARY KEY,
                         cost BIGINT
                         )""")
+            
+            self.cursor.execute("""CREATE TABLE IF NOT EXISTS bank(
+                                user_id INT,
+                                end_date TEXT,
+                                deposit BIGINT,
+                                multiplier REAL,
+                                FOREIGN KEY(user_id) REFERENCES users(user_id)
+                                )""")
             
             self.connection.commit()
 
@@ -75,6 +84,22 @@ class Database:
     def get_role_cost(self, role_id: int):
         result =  self.cursor.execute("SELECT cost FROM shop WHERE role_id = ?", (role_id,)).fetchone()
         return result[0]
+    
+    def get_bank_id(self, member_id: int):
+        result = self.cursor.execute("SELECT user_id FROM bank WHERE user_id = ?", (member_id,)).fetchone()
+        return result[0] if result else None
+    
+    def get_bank_end_date(self, member_id: int):
+        result = self.cursor.execute("SELECT user_id FROM bank WHERE user_id = ?", (member_id,)).fetchone()
+        return result[0]
+    
+    def get_bank_deposit(self, member_id: int):
+        result = self.cursor.execute("SELECT deposit FROM bank WHERE user_id = ?", (member_id,)).fetchone()
+        return result[0]
+    
+    def get_bank_multiplier(self, member_id: int):
+        result = self.cursor.execute("SELECT multiplier FROM bank WHERE user_id = ?", (member_id,)).fetchone()
+        return result[0]
 
 
 
@@ -106,6 +131,21 @@ class Database:
 
     def set_role_cost(self, amount: int, member_id: int):
         self.cursor.execute("UPDATE shop SET cost = ? WHERE role_id = ?", (amount, member_id))
+        self.connection.commit()
+        return
+    
+    def set_bank_end_date(self, date: datetime, member_id: int):
+        self.cursor.execute("UPDATE bank SET end_date = ? WHERE user_id = ?", (date, member_id))
+        self.connection.commit()
+        return
+    
+    def set_bank_deposit(self, amount: int, member_id: int):
+        self.cursor.execute("UPDATE bank SET deposit = ? WHERE user_id = ?", (amount, member_id))
+        self.connection.commit()
+        return
+    
+    def set_bank_multiplier(self, multi: float, member_id: int):
+        self.cursor.execute("UPDATE bank SET multiplier = ? WHERE user_id = ?", (multi, member_id))
         self.connection.commit()
         return
     
