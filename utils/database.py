@@ -25,10 +25,9 @@ class Database:
             
             self.cursor.execute("""CREATE TABLE IF NOT EXISTS bank(
                                 user_id INT,
-                                end_date TEXT,
+                                end_date TIMESTAMP,
                                 deposit BIGINT,
-                                multiplier REAL,
-                                FOREIGN KEY(user_id) REFERENCES users(user_id)
+                                multiplier REAL
                                 )""")
             
             self.connection.commit()
@@ -89,15 +88,15 @@ class Database:
         result = self.cursor.execute("SELECT user_id FROM bank WHERE user_id = ?", (member_id,)).fetchone()
         return result[0] if result else None
     
-    def get_bank_end_date(self, member_id: int):
-        result = self.cursor.execute("SELECT user_id FROM bank WHERE user_id = ?", (member_id,)).fetchone()
-        return result[0]
+    def get_bank_end_date(self, member_id: int) -> datetime:
+        result = self.cursor.execute("SELECT end_date FROM bank WHERE user_id = ?", (member_id,)).fetchone()
+        return datetime.fromisoformat(result[0])
     
-    def get_bank_deposit(self, member_id: int):
+    def get_bank_deposit(self, member_id: int) -> int:
         result = self.cursor.execute("SELECT deposit FROM bank WHERE user_id = ?", (member_id,)).fetchone()
         return result[0]
     
-    def get_bank_multiplier(self, member_id: int):
+    def get_bank_multiplier(self, member_id: int) -> float:
         result = self.cursor.execute("SELECT multiplier FROM bank WHERE user_id = ?", (member_id,)).fetchone()
         return result[0]
 
@@ -195,7 +194,18 @@ class Database:
         self.connection.commit()
         return
     
+    def delete_bank(self, member_id: int):
+        self.cursor.execute("DELETE FROM bank WHERE user_id = ?", (member_id,))
+        self.connection.commit()
+        return
+    
 
+
+    def check_bank_deposit(self, member_id):
+        if self.cursor.execute("SELECT 1 FROM bank WHERE user_id = ?", (member_id,)).fetchone():
+            return True
+        else:
+            return False
 
     def level_xp_update(self, member_id: int, xp_gain: int):
         level_up = 50 - xp_gain
