@@ -30,7 +30,7 @@ class BankDeposit(View):
             if interaction.user != self.member:
                 return
 
-            end_date = (datetime.now() + timedelta(minutes=days))
+            end_date = (datetime.now() + timedelta(days=days))
 
             self.client.db.cursor.execute("INSERT INTO bank VALUES (?, ?, ?, ?)", (int(self.member.id), end_date, int(self.deposit), float(multiplier)))
             self.client.db.update_member_cash(self.deposit, '-', self.member.id)
