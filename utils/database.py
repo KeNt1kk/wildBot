@@ -209,11 +209,10 @@ class Database:
 
     def level_xp_update(self, member_id: int, xp_gain: int):
         level_up = 50 - xp_gain
+        self.cursor.execute("UPDATE users SET level_xp = level_xp + ? WHERE user_id = ?", (xp_gain, member_id))
         if self.get_member_level_xp(member_id) > 49:
-            self.cursor.execute("UPDATE users SET level_xp = level_xp - ? WHERE user_id = ?", (level_up, member_id))
+            self.cursor.execute("UPDATE users SET level_xp = level_xp - 50 WHERE user_id = ?", (member_id,))
             self.cursor.execute("UPDATE users SET level = level + 1 WHERE user_id = ?", (member_id,))
-        else:
-            self.cursor.execute("UPDATE users SET level_xp = level_xp + ? WHERE user_id = ?", (xp_gain, member_id))
-        
+
         self.connection.commit()
         return
