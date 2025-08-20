@@ -201,6 +201,18 @@ class AdminCog(commands.Cog):
         except Exception as e:
             print(f'error: {e}')
 
+    
+
+    @commands.command(name='check_xp')
+    @commands.is_owner()
+    async def __check_xp(self, ctx, member: discord.Member = None):
+        if member is None:
+            level_xp = self.client.db.get_member_level_xp(ctx.author.id)
+            await ctx.send(level_xp)
+        elif member:
+            level_xp = self.client.db.get_member_level_xp(member.id)
+            await ctx.send(level_xp)
+
 
 
 

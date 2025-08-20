@@ -75,7 +75,6 @@ class BankWithdrawal(View):
             
             deposit = self.client.db.get_bank_deposit(self.member.id)
             multiplier = self.client.db.get_bank_multiplier(self.member.id)
-            print(multiplier)
             result = int(deposit * multiplier)
 
             self.client.db.update_member_cash(result, '+', self.member.id)
