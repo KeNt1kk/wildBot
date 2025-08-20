@@ -128,7 +128,7 @@ class EarningCog(commands.Cog):
 
 
     @commands.command(name='job')
-    @commands.cooldown(1, 600, commands.BucketType.user)
+    @commands.cooldown(1, 3600, commands.BucketType.user)
     async def __job(self, ctx):
             try:
                 level = self.client.db.get_member_level(ctx.author.id)
@@ -144,6 +144,26 @@ class EarningCog(commands.Cog):
                 await ctx.send(embed=embed)
             except Exception as e:
                 print(f'error: {e}')
+
+
+
+    @commands.command(name='daily')
+    @commands.cooldown(1, 86400, commands.BucketType.user)
+    async def __daily(self, ctx):
+        try:
+            level = self.client.db.get_member_level(ctx.author.id)
+            reward = level * 200
+
+            self.client.db.update_member_cash(reward, '+', ctx.author.id)
+            self.client.db.level_xp_update(ctx.author.id, 20)
+
+            embed = discord.Embed(title=Variable.succes_title,
+                                  description=f'Вы получили ежедневную награду в размере {reward} {Variable.currency}',
+                                  color=Variable.green_color)
+            
+            await ctx.send(embed=embed)
+        except Exception as e:
+            print(f'error: {e}')
 
 
 
