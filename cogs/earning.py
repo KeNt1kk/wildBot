@@ -107,8 +107,8 @@ class EarningCog(commands.Cog):
                 
                 await ctx.send(embed=embed)
 
-                self.client.db.update_member_cash(member_cash, '-', member.id)
-                self.client.db.update_member_cash(member_cash, '+', ctx.author.id)
+                self.client.db.update_member_cash(-member_cash, member.id)
+                self.client.db.update_member_cash(member_cash, ctx.author.id)
 
                 self.client.db.level_xp_update(ctx.author.id, 20)
             else:
@@ -118,7 +118,7 @@ class EarningCog(commands.Cog):
                 
                 await ctx.send(embed=embed)
 
-                self.client.db.update_member_cash(author_cash, '-', ctx.author.id)
+                self.client.db.update_member_cash(-author_cash, ctx.author.id)
 
                 self.client.db.level_xp_update(ctx.author.id, 5)
         except Exception as e:
@@ -134,7 +134,7 @@ class EarningCog(commands.Cog):
                 level = self.client.db.get_member_level(ctx.author.id)
                 reward = (random.randint(1, 50)) + (level * 50)
 
-                self.client.db.update_member_cash(reward, '+', ctx.author.id)
+                self.client.db.update_member_cash(reward, ctx.author.id)
                 self.client.db.level_xp_update(ctx.author.id, 5)
 
                 embed = discord.Embed(title=Variable.succes_title,
@@ -154,7 +154,7 @@ class EarningCog(commands.Cog):
             level = self.client.db.get_member_level(ctx.author.id)
             reward = level * 200
 
-            self.client.db.update_member_cash(reward, '+', ctx.author.id)
+            self.client.db.update_member_cash(reward, ctx.author.id)
             self.client.db.level_xp_update(ctx.author.id, 20)
 
             embed = discord.Embed(title=Variable.succes_title,

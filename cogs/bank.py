@@ -50,8 +50,8 @@ class BankCog(commands.Cog):
                 ctx.command.reset_cooldown(ctx)
                 return
             
-            self.client.db.update_member_cash(amount, '-', ctx.author.id)
-            self.client.db.update_member_cash(amount, '+', member.id)
+            self.client.db.update_member_cash(-amount, ctx.author.id)
+            self.client.db.update_member_cash(amount, member.id)
 
             embed = discord.Embed(title=Variable.succes_title,
                                 description=f'Пользователю {member.mention} успешно переведено {amount} {Variable.currency}',

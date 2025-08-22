@@ -33,7 +33,7 @@ class BankDeposit(View):
             end_date = (datetime.now() + timedelta(days=days))
 
             self.client.db.cursor.execute("INSERT INTO bank VALUES (?, ?, ?, ?)", (int(self.member.id), end_date, int(self.deposit), float(multiplier)))
-            self.client.db.update_member_cash(self.deposit, '-', self.member.id)
+            self.client.db.update_member_cash(-self.deposit, self.member.id)
 
 
             if days == 1:
@@ -77,7 +77,7 @@ class BankWithdrawal(View):
             multiplier = self.client.db.get_bank_multiplier(self.member.id)
             result = int(deposit * multiplier)
 
-            self.client.db.update_member_cash(result, '+', self.member.id)
+            self.client.db.update_member_cash(result, self.member.id)
             self.client.db.delete_bank(self.member.id)
 
             if multiplier == 1.1:

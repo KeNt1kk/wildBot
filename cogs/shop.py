@@ -93,7 +93,7 @@ class ShopCog(commands.Cog):
                 return
             
             await ctx.author.add_roles(role)
-            self.client.db.update_member_cash(cost, '-', ctx.author.id)
+            self.client.db.update_member_cash(-cost, ctx.author.id)
 
             embed = discord.Embed(title=Variable.succes_title,
                                   description=f'Вы успешно приобрели роль {role.mention}',

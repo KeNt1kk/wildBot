@@ -30,11 +30,11 @@ class CoinFlip(View):
             embed.set_footer(text=f'Игрок: {self.member.display_name}')
             
             if win:
-                self.client.db.update_member_cash(self.bet, '+', self.member.id)
-                self.client.db.update_member_total_wins(1, '+', self.member.id)
+                self.client.db.update_member_cash(self.bet, self.member.id)
+                self.client.db.update_member_total_wins(1, self.member.id)
             else:
-                self.client.db.update_member_cash(self.bet, '-', self.member.id)
-                self.client.db.update_member_total_lose(1, '+', self.member.id)
+                self.client.db.update_member_cash(-self.bet, self.member.id)
+                self.client.db.update_member_total_lose(1, self.member.id)
 
             self.client.db.level_xp_update(self.member.id, 1)
             
@@ -61,11 +61,11 @@ class CoinFlip(View):
             embed.set_footer(text=f'Игрок: {self.member.display_name}')
 
             if win:
-                self.client.db.update_member_cash(self.bet, '+', self.member.id)
-                self.client.db.update_member_total_wins(1, '+', self.member.id)
+                self.client.db.update_member_cash(self.bet, self.member.id)
+                self.client.db.update_member_total_wins(1, self.member.id)
             else:
-                self.client.db.update_member_cash(self.bet, '-', self.member.id)
-                self.client.db.update_member_total_lose(1, '+', self.member.id)
+                self.client.db.update_member_cash(-self.bet, self.member.id)
+                self.client.db.update_member_total_lose(1, self.member.id)
 
             self.client.db.level_xp_update(self.member.id, 1)
                 

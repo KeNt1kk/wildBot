@@ -31,7 +31,7 @@ class AdminCog(commands.Cog):
                 return
             
             if member is None:
-                self.client.db.update_member_cash(amount, '+', ctx.author.id)
+                self.client.db.update_member_cash(amount, ctx.author.id)
 
                 embed = discord.Embed(title=Variable.succes_title,
                                       description=f'Игроку {ctx.author.mention} начислено {amount} {Variable.currency}',
@@ -39,7 +39,7 @@ class AdminCog(commands.Cog):
                 
                 await ctx.send(embed = embed)
             elif member:
-                self.client.db.update_member_cash(amount, '+', member.id)
+                self.client.db.update_member_cash(amount, member.id)
 
                 embed = discord.Embed(title=Variable.succes_title,
                                       description=f'Игроку {member.mention} начислено {amount} {Variable.currency}',
@@ -71,7 +71,7 @@ class AdminCog(commands.Cog):
                 return
             
             if member is None:
-                self.client.db.update_member_cash(amount, '-', ctx.author.id)
+                self.client.db.update_member_cash(-amount, ctx.author.id)
 
                 embed = discord.Embed(title=Variable.succes_title,
                                       description=f'Игроку {ctx.author.mention} сняли {amount} {Variable.currency}',
@@ -79,7 +79,7 @@ class AdminCog(commands.Cog):
                 
                 await ctx.send(embed = embed)
             elif member:
-                self.client.db.update_member_cash(amount, '-', member.id)
+                self.client.db.update_member_cash(-amount, member.id)
 
                 embed = discord.Embed(title=Variable.succes_title,
                                       description=f'Игроку {member.mention} сняли {amount} {Variable.currency}',
