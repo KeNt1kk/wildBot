@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import datetime, date, timedelta
+from datetime import datetime, timedelta
 
 class Database:
     def __init__(self, client):
@@ -74,7 +74,7 @@ class Database:
 
     def get_member_name(self, member_id: int):
         result =  self.cursor.execute("SELECT name FROM users WHERE user_id = ?", (member_id,)).fetchone()
-        return result[0] if result else None
+        return result[0]
 
     def get_member_cash(self, member_id: int):
         result =  self.cursor.execute("SELECT cash FROM users WHERE user_id = ?", (member_id,)).fetchone()
@@ -245,13 +245,13 @@ class Database:
         self.connection.commit()
         return
     
-    def set_user_rate_bet(self, bet: int, user_id: int):
-        self.cursor.execute("UPDATE users_rates SET bet = ? WHERE user_id = ?", (bet, user_id))
+    def set_user_rate_bet(self, bet: int, member_id: int):
+        self.cursor.execute("UPDATE users_rates SET bet = ? WHERE user_id = ?", (bet, member_id))
         self.connection.commit()
         return
     
-    def set_user_rate_selected_event(self, event: bool, user_id: int):
-        self.cursor.execute("UPDATE users_rates SET selected_event = ? WHERE user_id = ?", (event, user_id))
+    def set_user_rate_selected_event(self, event: bool, usemember_idr_id: int):
+        self.cursor.execute("UPDATE users_rates SET selected_event = ? WHERE user_id = ?", (event, member_id))
         self.connection.commit()
         return
     
@@ -259,32 +259,47 @@ class Database:
 
     # update методы
     def update_member_cash(self, amount: int, member_id: int):
-        self.cursor.execute(f"UPDATE users SET cash = cash + ? WHERE user_id = ?", (amount, member_id))
+        self.cursor.execute("UPDATE users SET cash = cash + ? WHERE user_id = ?", (amount, member_id))
         self.connection.commit()
         return
     
     def update_member_level(self, amount: int, member_id: int):
-        self.cursor.execute(f"UPDATE users SET level = level + ? WHERE user_id = ?", (amount, member_id))
+        self.cursor.execute("UPDATE users SET level = level + ? WHERE user_id = ?", (amount, member_id))
         self.connection.commit()
         return
     
     def update_member_level_xp(self, amount: int, member_id: int):
-        self.cursor.execute(f"UPDATE users SET level_xp = level_xp + ? WHERE user_id = ?", (amount, member_id))
+        self.cursor.execute("UPDATE users SET level_xp = level_xp + ? WHERE user_id = ?", (amount, member_id))
         self.connection.commit()
         return
     
     def update_member_total_wins(self, amount: int, member_id: int):
-        self.cursor.execute(f"UPDATE users SET total_wins = total_wins + ? WHERE user_id = ?", (amount, member_id))
+        self.cursor.execute("UPDATE users SET total_wins = total_wins + ? WHERE user_id = ?", (amount, member_id))
         self.connection.commit()
         return
     
     def update_member_total_lose(self, amount: int, member_id: int):
-        self.cursor.execute(f"UPDATE users SET total_lose = total_lose + ? WHERE user_id = ?", (amount, member_id))
+        self.cursor.execute("UPDATE users SET total_lose = total_lose + ? WHERE user_id = ?", (amount, member_id))
         self.connection.commit()
         return
     
     def update_role_cost(self, amount: int, role_id: int):
-        self.cursor.execute(f"UPDATE shop SET cost = cost + ? WHERE role_id = ?", (amount, role_id))
+        self.cursor.execute("UPDATE shop SET cost = cost + ? WHERE role_id = ?", (amount, role_id))
+        self.connection.commit()
+        return
+    
+    def update_bank_end_date(self, date: timedelta, member_id: int):
+        self.cursor.execute("UPDATE bank SET end_date = end_date + ? WHERE user_id = ?", (date, member_id))
+        self.connection.commit()
+        return
+    
+    def update_bank_deposit(self, amount: int, member_id: int):
+        self.cursor.execute("UPDATE bank SET deposit = deposit + ? WHERE user_id = ?", (amount, member_id))
+        self.connection.commit()
+        return
+    
+    def update_user_rate_bet(self, amount: int, member_id: int):
+        self.cursor.execute("UPDATE users_rates SET bet = bet + ? WHERE user_id = ?", (amount, member_id))
         self.connection.commit()
         return
     
@@ -306,13 +321,17 @@ class Database:
         self.connection.commit()
         return
     
+    def delete_rate(self, rate_id: int):
+        self.cursor.execute("DELETE FROM rates WHERE rate_id = ?", (rate_id,))
+        self.connection.commit()
+        return
+    
+    def delete_user_rate(self, member_id: int):
+        self.cursor.execute("DELETE FROM users_rates WHERE user_id = ?", (member_id,))
+        self.connection.commit()
+        return
+    
 
-
-    def check_bank_deposit(self, member_id):
-        if self.cursor.execute("SELECT 1 FROM bank WHERE user_id = ?", (member_id,)).fetchone():
-            return True
-        else:
-            return False
 
     def level_xp_update(self, member_id: int, xp_gain: int):
         level_up = 50 - xp_gain

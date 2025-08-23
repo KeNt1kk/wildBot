@@ -68,7 +68,7 @@ class BankCog(commands.Cog):
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def __bank(self, ctx, amount: int = None):
         try:
-            if self.client.db.check_bank_deposit(ctx.author.id):
+            if self.client.db.get_bank_id(ctx.author.id):
                 end_date = self.client.db.get_bank_end_date(ctx.author.id)
                 if end_date > datetime.now():
                     term = str(end_date - datetime.now()).split('.')[0]
