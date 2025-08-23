@@ -250,7 +250,7 @@ class Database:
         self.connection.commit()
         return
     
-    def set_user_rate_selected_event(self, event: bool, usemember_idr_id: int):
+    def set_user_rate_selected_event(self, event: bool, member_id: int):
         self.cursor.execute("UPDATE users_rates SET selected_event = ? WHERE user_id = ?", (event, member_id))
         self.connection.commit()
         return
