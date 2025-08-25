@@ -32,7 +32,7 @@ class Database:
                                 )""")
             
             self.cursor.execute("""CREATE TABLE IF NOT EXISTS rates(
-                                rate_id INT PRIMARY KEY,
+                                rate_id INT AUTO_INCREMENT PRIMARY KEY,
                                 name TEXT,
                                 description TEXT,
                                 first_event_name TEXT,
@@ -66,7 +66,38 @@ class Database:
         else:
             print('База данных успешно создана')
 
+
+
+    # insert методы
+    def insert_member(self, member_id: int, name: str):
+        self.cursor.execute("INSERT INTO users (user_id, name) VALUES (?, ?)", (member_id, name))
+        self.connection.commit()
+        return
     
+    def insert_shop(self, role_id: int, cost: int):
+        self.cursor.execute("INSERT INTO shop VALUES (?, ?)", (role_id, cost))
+        self.connection.commit()
+        return
+    
+    def insert_bank(self, member_id: int, end_date: datetime, deposit: int, multiplier: float):
+        self.cursor.execute("INSERT INTO bank VALUES (?, ?, ?, ?)", (member_id, end_date, deposit, multiplier))
+        self.connection.commit()
+        return
+    
+    def insert_rate(self, name: str, description: str, first_event_name: str, first_event_chance: float, second_event_name: str, second_event_chance: float):
+        self.cursor.execute("INSERT INTO rates (name, description, first_event_name, first_event_chance, second_event_name, second_event_chance) VALUES (?, ?, ?, ?, ?, ?)",
+                            (name, description, first_event_name, first_event_chance, second_event_name, second_event_chance))
+        self.connection.commit()
+        return
+    
+    def insert_user_rate(self, member_id: int, rate_id: int, bet: int, selected_event: bool):
+        self.cursor.execute("INSERT INTO users_rates VALUES (?, ?, ?, ?)", (member_id, rate_id, bet, selected_event))
+        self.connection.commit()
+        return
+
+
+
+
     # get методы
     def get_member_id(self, member_id: int):
         result = self.cursor.execute("SELECT user_id FROM users WHERE user_id = ?", (member_id,)).fetchone()
@@ -98,7 +129,7 @@ class Database:
     
     def get_role_id(self, role_id: int):
         result = self.cursor.execute("SELECT role_id FROM shop WHERE role_id = ?", (role_id,)).fetchone()
-        return result[0]
+        return result[0] if result else None
 
     def get_role_cost(self, role_id: int):
         result =  self.cursor.execute("SELECT cost FROM shop WHERE role_id = ?", (role_id,)).fetchone()
@@ -150,11 +181,11 @@ class Database:
     
     def get_user_rate_user_id(self, member_id: int):
         result =  self.cursor.execute("SELECT user_id FROM users_rates WHERE user_id = ?", (member_id,)).fetchone()
-        return result[0]
+        return result[0] if result else None
     
     def get_user_rate_rate_id(self, member_id: int):
         result =  self.cursor.execute("SELECT rate_id FROM users_rates WHERE user_id = ?", (member_id,)).fetchone()
-        return result[0]
+        return result[0] if result else None
     
     def get_user_rate_bet(self, member_id: int):
         result =  self.cursor.execute("SELECT bet FROM users_rates WHERE user_id = ?", (member_id,)).fetchone()

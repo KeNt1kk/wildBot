@@ -191,7 +191,7 @@ class AdminCog(commands.Cog):
                 await ctx.send(embed=embed)
                 return
         
-            self.client.db.cursor.execute("INSERT INTO shop VALUES (?, ?)", (role.id, cost))
+            self.client.db.insert_shop(role.id, cost)
             self.client.db.connection.commit()
             embed = discord.Embed(title=Variable.succes_title,
                                 description=f'Роль {role.mention} была успешно добавлена в магазин',
@@ -199,7 +199,7 @@ class AdminCog(commands.Cog):
             
             await ctx.send(embed=embed)
         except Exception as e:
-            print(f'error: {e}')
+            print(f'add_shop error: {e}')
 
     
 

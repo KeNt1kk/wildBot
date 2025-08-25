@@ -32,7 +32,7 @@ class BankDeposit(View):
 
             end_date = (datetime.now() + timedelta(days=days))
 
-            self.client.db.cursor.execute("INSERT INTO bank VALUES (?, ?, ?, ?)", (int(self.member.id), end_date, int(self.deposit), float(multiplier)))
+            self.client.db.insert_bank(self.member.id, end_date, self.deposit, multiplier)
             self.client.db.update_member_cash(-self.deposit, self.member.id)
 
 
